@@ -14,7 +14,9 @@ data = {"market_name": "amarr",
                   {"name": "Auto-Integrity Preservation Seal"},
                   {"name": "Life Support Backup Unit"},
                   {"name": "Coercer Navy Issue"},
-                  {"name": "Omen Navy Issue"}]
+                  {"name": "Omen Navy Issue"},
+                  {"name": "Augoror Navy Issue"},
+                  {"name": "Prophecy Navy Issue"}]
         }
 
 jdata = requests.post("https://evepraisal.com/appraisal/structured.json",
@@ -26,7 +28,6 @@ print(type(data))
 all_mats = []
 
 for material in data["appraisal"]["items"]:
-    print(material)
     print(material["name"], " sell", material["prices"]["sell"]["percentile"])
     print(material["name"], " buy", material["prices"]["buy"]["percentile"])
 
