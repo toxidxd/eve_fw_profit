@@ -59,7 +59,7 @@ def profit_calc(items_data, prices):
 
 
 def results_to_file(results, hub):
-    with open(f"result_{hub}.csv", "a", newline='') as csv_file:
+    with open(f"result_{hub}.csv", "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=',')
         writer.writerow(
             ['item', 'lp', 'expenses_sell', 'expenses_buy', 'i_profit_sell', 'i_profit_buy', 'k_sell', 'k_buy']
@@ -71,7 +71,8 @@ def results_to_file(results, hub):
 
 
 production_data = data_reader("data.csv")
-trade_hub = 'jita'
-price_data = price_parser(production_data, trade_hub)
-profit_dict = profit_calc(production_data, price_data)
-results_to_file(profit_dict, trade_hub)
+trade_hub = ['amarr', 'jita', 'dodixie', 'hek']
+for i_hub in trade_hub:
+    price_data = price_parser(production_data, i_hub)
+    profit_dict = profit_calc(production_data, price_data)
+    results_to_file(profit_dict, i_hub)
