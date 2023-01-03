@@ -43,4 +43,10 @@ with open("materials_price.csv", "w", newline='') as csv_file:
     for line in all_mats:
         writer.writerow(line)
 
+data = []
+with open("data.csv", "r",newline='') as csv_f:
+    for x in csv_f:
+        data.append(x.split(','))
+
+print(data)
 print("File wrote!")
