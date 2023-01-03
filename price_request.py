@@ -67,7 +67,7 @@ def results_to_file(results, hub):
         for line in results:
             writer.writerow(line)
 
-    print('File writed!')
+    print(f'Results for {hub} writed!')
 
 
 production_data = data_reader("data.csv")
