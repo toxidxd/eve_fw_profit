@@ -7,7 +7,7 @@ from fake_useragent import UserAgent
 def data_reader(csv_file):
     csv_data = []
     with open(csv_file) as csv_f:
-        reader = csv.reader(csv_f, delimiter=',')
+        reader = csv.reader(csv_f, delimiter=';')
         for i_line in reader:
             csv_data.append(i_line)
 
