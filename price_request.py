@@ -34,48 +34,47 @@ def data_to_request(data, hub):
                      [{'name': i_item[0]} for i_item in data[1:]]}
 
 
-def profit_calc(items_data, prices):
+def profit_calc(items_data):
     result = []
     order_type = ['sell', 'buy']
-    for i_type in order_type:
-        for i_item in items_data[1:]:
-            expenses = int(i_item[2]) + int(i_item[3]) + int(i_item[4])  # сразу добавляем стоимость покупки, стройки, налог
-            materials_cost = 0
-            for i, i_material in enumerate(items_data[0][5:]):
-                material_price = int(i_item[5+i]) * float(prices[i_material][i_type])
-                materials_cost += material_price
+    trade_hub = ['amarr', 'jita', 'dodixie', 'hek']
+    for i_hub in trade_hub:
+        prices = price_parser(items_data, i_hub)
+        for i_type in order_type:
+            for i_item in items_data[1:]:
+                expenses = int(i_item[2]) + int(i_item[3]) + int(i_item[4])
+                materials_cost = 0
+                for i, i_material in enumerate(items_data[0][5:]):
+                    material_price = int(i_item[5+i]) * float(prices[i_material][i_type])
+                    materials_cost += material_price
 
-            ship_price = int(prices[i_item[0]]['sell'])
-            profit = ship_price - expenses - materials_cost
+                ship_price = int(prices[i_item[0]]['sell'])
+                profit = ship_price - expenses - materials_cost
 
-            k = round(profit/int(i_item[1])/1000, 2)
+                k = round(profit/int(i_item[1])/1000, 2)
 
-            i_result = [i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k]
+                i_result = [i_item[0], i_hub, i_type, i_item[1], expenses, materials_cost, ship_price, profit, k]
 
-            result.append(replace_dots(i_result))
+                result.append(replace_dots(i_result))
 
-    return result
+    results_to_file(result)
 
 
-def results_to_file(results, hub):
-    with open(f"result_{hub}.csv", "w", newline='') as csv_file:
+def results_to_file(results):
+
+    with open(f"result.csv", "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=';')
         writer.writerow(
-            ['ship_type', 'order_type', 'lp', 'expenses', 'materials_cost', 'ship_price_sell', 'profit', 'k']
+            ['ship_type', 'hub', 'order_type', 'lp', 'expenses', 'materials_cost', 'ship_price_sell', 'profit', 'k']
         )
         for line in results:
             writer.writerow(line)
 
-    print(f'Results for {hub} writed!')
+    print('Results writed!')
 
 
 def replace_dots(some_list):
     return [str(i_row).replace('.', ',') for i_row in some_list]
 
 
-production_data = data_reader("data.csv")
-trade_hub = ['amarr', 'jita', 'dodixie', 'hek']
-for i_hub in trade_hub:
-    price_data = price_parser(production_data, i_hub)
-    profit_dict = profit_calc(production_data, price_data)
-    results_to_file(profit_dict, i_hub)
+profit_calc(data_reader("data.csv"))
