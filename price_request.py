@@ -36,24 +36,21 @@ def data_to_request(data, hub):
 
 def profit_calc(items_data, prices):
     result = []
-    for i_item in items_data[1:]:
-        expenses_sell = int(i_item[2])  # сразу добавляем стоимость покупки чертежа
-        expenses_buy = int(i_item[2])  # сразу добавляем стоимость покупки чертежа
+    order_type = ['sell', 'buy']
+    for i_type in order_type:
+        for i_item in items_data[1:]:
+            expenses = int(i_item[2]) + int(i_item[3]) + int(i_item[4])  # сразу добавляем стоимость покупки, стройки, налог
+            materials_cost = 0
+            for i, i_material in enumerate(items_data[0][5:]):
+                material_price = int(i_item[5+i]) * float(prices[i_material][i_type])
+                materials_cost += material_price
 
-        for i, i_material in enumerate(items_data[0][5:]):
-            material_price_sell = int(i_item[5+i]) * float(prices[i_material]['sell'])
-            expenses_sell += material_price_sell
+            ship_price = int(prices[i_item[0]]['sell'])
+            profit = ship_price - expenses - materials_cost
 
-            material_price_buy = int(i_item[5+i]) * float(prices[i_material]['buy'])
-            expenses_buy += material_price_buy
+            k = round(profit/int(i_item[1])/1000, 2)
 
-        i_profit_sell = int(prices[i_item[0]]['sell']) - expenses_sell
-        i_profit_buy = int(prices[i_item[0]]['sell']) - expenses_buy
-
-        k_sell = round(i_profit_sell/int(i_item[1])/1000, 2)
-        k_buy = round(i_profit_buy/int(i_item[1])/1000, 2)
-
-        result.append([i_item[0], i_item[1], expenses_sell, expenses_buy, i_profit_sell, i_profit_buy, k_sell, k_buy])
+            result.append([i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k])
 
     return result
 
@@ -62,7 +59,7 @@ def results_to_file(results, hub):
     with open(f"result_{hub}.csv", "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=',')
         writer.writerow(
-            ['item', 'lp', 'expenses_sell', 'expenses_buy', 'i_profit_sell', 'i_profit_buy', 'k_sell', 'k_buy']
+            ['ship_type', 'order_type', 'lp', 'expenses',' materials_cost', 'ship_price', 'profit', 'k']
         )
         for line in results:
             writer.writerow(line)
