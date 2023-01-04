@@ -53,7 +53,6 @@ def profit_calc(items_data, prices):
             i_result = [i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k]
 
             result.append(replace_dots(i_result))
-            # result.append([i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k])
 
     return result
 
@@ -62,7 +61,7 @@ def results_to_file(results, hub):
     with open(f"result_{hub}.csv", "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=';')
         writer.writerow(
-            ['ship_type', 'order_type', 'lp', 'expenses',' materials_cost', 'ship_price', 'profit', 'k']
+            ['ship_type', 'order_type', 'lp', 'expenses',' materials_cost', 'ship_price_sell', 'profit', 'k']
         )
         for line in results:
             writer.writerow(line)
