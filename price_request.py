@@ -50,14 +50,17 @@ def profit_calc(items_data, prices):
 
             k = round(profit/int(i_item[1])/1000, 2)
 
-            result.append([i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k])
+            i_result = [i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k]
+
+            result.append(replace_dots(i_result))
+            # result.append([i_item[0], i_type, i_item[1], expenses, materials_cost, ship_price, profit, k])
 
     return result
 
 
 def results_to_file(results, hub):
     with open(f"result_{hub}.csv", "w", newline='') as csv_file:
-        writer = csv.writer(csv_file, delimiter=',')
+        writer = csv.writer(csv_file, delimiter=';')
         writer.writerow(
             ['ship_type', 'order_type', 'lp', 'expenses',' materials_cost', 'ship_price', 'profit', 'k']
         )
@@ -66,6 +69,8 @@ def results_to_file(results, hub):
 
     print(f'Results for {hub} writed!')
 
+def replace_dots(some_list):
+    return [str(i_row).replace('.', ',') for i_row in some_list]
 
 production_data = data_reader("data.csv")
 trade_hub = ['amarr', 'jita', 'dodixie', 'hek']
