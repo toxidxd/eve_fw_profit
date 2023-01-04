@@ -61,15 +61,17 @@ def results_to_file(results, hub):
     with open(f"result_{hub}.csv", "w", newline='') as csv_file:
         writer = csv.writer(csv_file, delimiter=';')
         writer.writerow(
-            ['ship_type', 'order_type', 'lp', 'expenses',' materials_cost', 'ship_price_sell', 'profit', 'k']
+            ['ship_type', 'order_type', 'lp', 'expenses', 'materials_cost', 'ship_price_sell', 'profit', 'k']
         )
         for line in results:
             writer.writerow(line)
 
     print(f'Results for {hub} writed!')
 
+
 def replace_dots(some_list):
     return [str(i_row).replace('.', ',') for i_row in some_list]
+
 
 production_data = data_reader("data.csv")
 trade_hub = ['amarr', 'jita', 'dodixie', 'hek']
